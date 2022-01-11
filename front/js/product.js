@@ -56,3 +56,39 @@ const displayItemId = (product) => {
 };
 
 fetchApiId ();
+
+// Ajout des produits sélectionnés dans le local storage
+
+const addToCart = () => {
+    document.getElementById("addToCart").addEventListener("click", function () {
+        let chosenColor = document.getElementById("colors").value;
+        let chosenQuantity = document.getElementById("quantity").value;
+
+        // Alerte si couleur non choisie, enregistrement dans le local storage si conforme
+        if (chosenColor == 0) {
+            alert("Veuillez choisir une couleur disponible");
+        } else {
+            localStorage.setItem("color", chosenColor);
+        };
+
+        // Alerte si quantité non conforme, enregistrement dans le local storage si conforme
+        if (chosenQuantity < 1 || chosenQuantity > 100) {
+            alert("Veuillez choisir une quantité entre 1 et 100");
+        } else {
+            localStorage.setItem("quantity", chosenQuantity);
+        };
+
+        // Stockage de l'ID du produit dans le local storage
+
+        if (chosenColor && chosenQuantity != null) {
+            localStorage.setItem("ID", idProduct);
+        // Stockage des valeurs récupérées dans un tableau
+            let storageArray = [localStorage.getItem("color"), localStorage.getItem("quantity"), localStorage.getItem("ID")];
+            console.log(storageArray);
+        } 
+        
+    })
+};
+
+addToCart ();
+
