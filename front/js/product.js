@@ -43,7 +43,7 @@ const displayItemId = (product) => {
     // intégration de l'image du produit
     let productImg = document.querySelector(".item__img img");
     productImg.setAttribute ("src", product.imageUrl);
-
+    productImg.setAttribute ("alt", product.altTxt);
     // intégration des couleurs disponibles
     for (let i of product.colors) {
         let newOptionTag = document.createElement("option");
@@ -82,6 +82,7 @@ const addToCart = () => {
 
         if (chosenColor && chosenQuantity != null) {
             localStorage.setItem("ID", idProduct);
+            
         // Stockage des valeurs récupérées dans un tableau
             let storageArray = [localStorage.getItem("color"), localStorage.getItem("quantity"), localStorage.getItem("ID")];
             console.log(storageArray);
