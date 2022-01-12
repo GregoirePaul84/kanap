@@ -40,7 +40,7 @@ const displayItemId = (product) => {
     let productDescription = document.getElementById("description");
     productDescription.innerHTML = product.description;
     
-    // intégration de l'image du produit
+    // intégration de l'image et de l'attribut alt du produit
     let productImg = document.querySelector(".item__img img");
     productImg.setAttribute ("src", product.imageUrl);
     productImg.setAttribute ("alt", product.altTxt);
@@ -52,18 +52,23 @@ const displayItemId = (product) => {
         newOptionTag.value = i;
     }
     
-    
 };
 
 fetchApiId ();
 
 // Ajout des produits sélectionnés dans le local storage
 
-const addToCart = () => {
+const addToCart = (product) => {
+    
     document.getElementById("addToCart").addEventListener("click", function () {
         let chosenColor = document.getElementById("colors").value;
         let chosenQuantity = document.getElementById("quantity").value;
+        let productImg = document.querySelector(".item__img img").getAttribute("src");
+        let productAlt = document.querySelector(".item__img img").getAttribute("alt");
+        let productName = document.getElementById("title").innerText;
+        let productPrice = document.getElementById("price").innerText;
 
+        console.log(productImg);
         // Alerte si couleur non choisie, enregistrement dans le local storage si conforme
         if (chosenColor == 0) {
             alert("Veuillez choisir une couleur disponible");
@@ -82,9 +87,13 @@ const addToCart = () => {
 
         if (chosenColor && chosenQuantity != null) {
             localStorage.setItem("ID", idProduct);
-            
+            localStorage.setItem("Img", productImg);
+            localStorage.setItem("alt", productAlt);
+            localStorage.setItem("name", productName);
+            localStorage.setItem("price", productPrice);
+
         // Stockage des valeurs récupérées dans un tableau
-            let storageArray = [localStorage.getItem("color"), localStorage.getItem("quantity"), localStorage.getItem("ID")];
+            let storageArray = [localStorage.getItem("color"), localStorage.getItem("quantity"), localStorage.getItem("ID"), localStorage.getItem("Img"), localStorage.getItem("alt"), localStorage.getItem("name"), localStorage.getItem("price")];
             console.log(storageArray);
         } 
         
