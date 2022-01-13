@@ -4,7 +4,7 @@ let str = window.location.href;
 let url = new URL(str);
 let idProduct = url.searchParams.get("id");
 
-// Récupération de chaque produit de L'API selon son ID
+// Récupération de chaque produit de L'API selon leur ID
 
 const fetchApiId = async () => {
     await fetch('http://localhost:3000/api/products/' + idProduct)
@@ -90,7 +90,11 @@ const addToCart = () => {
         let storrageObject = {
             id : idProduct,
             quantity : chosenQuantity,
-            color : chosenColor
+            color : chosenColor,
+            name : productName,
+            imgUrl : productImg,
+            altTxt : productAlt,
+            price : productPrice
         };
 
         console.log(storrageObject);
@@ -111,7 +115,7 @@ const addToCart = () => {
             savedProductLocalStorrage = [];
             // On y injecte l'objet
             savedProductLocalStorrage.push(storrageObject);
-            // On crée la clé "product" et on l'envoie en format JSON dans le local storrage
+            // On crée la clé "product" et on le sérialise en format JSON dans le local storrage
             localStorage.setItem("product", JSON.stringify(savedProductLocalStorrage))
             console.log(savedProductLocalStorrage);
         }
