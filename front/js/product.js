@@ -58,7 +58,7 @@ fetchApiId ();
 
 // Ajout des produits sélectionnés dans le local storage
 
-const addToCart = (product) => {
+const addToCart = () => {
     
     document.getElementById("addToCart").addEventListener("click", function () {
         let chosenColor = document.getElementById("colors").value;
@@ -68,37 +68,61 @@ const addToCart = (product) => {
         let productName = document.getElementById("title").innerText;
         let productPrice = document.getElementById("price").innerText;
 
-        console.log(productImg);
-        // Alerte si couleur non choisie, enregistrement dans le local storage si conforme
+        // Alerte si couleur non choisie
         if (chosenColor == 0) {
             alert("Veuillez choisir une couleur disponible");
         } else {
-            localStorage.setItem("color", chosenColor);
+            // return;
         };
 
-        // Alerte si quantité non conforme, enregistrement dans le local storage si conforme
+        // Alerte si quantité non conforme
         if (chosenQuantity < 1 || chosenQuantity > 100) {
             alert("Veuillez choisir une quantité entre 1 et 100");
         } else {
-            localStorage.setItem("quantity", chosenQuantity);
+            // return;
         };
 
-        // Stockage de l'ID du produit dans le local storage
+        // Si la couleur est la quantité sont conformes
 
         if (chosenColor && chosenQuantity != null) {
-            localStorage.setItem("ID", idProduct);
-            localStorage.setItem("Img", productImg);
-            localStorage.setItem("alt", productAlt);
-            localStorage.setItem("name", productName);
-            localStorage.setItem("price", productPrice);
+        // Création d'un objet stocké dans le local storage
+            
+        let storrageObject = {
+            id : idProduct,
+            quantity : chosenQuantity,
+            color : chosenColor
+        };
 
-        // Stockage des valeurs récupérées dans un tableau
-            let storageArray = [localStorage.getItem("color"), localStorage.getItem("quantity"), localStorage.getItem("ID"), localStorage.getItem("Img"), localStorage.getItem("alt"), localStorage.getItem("name"), localStorage.getItem("price")];
-            console.log(storageArray);
+        console.log(storrageObject);
+
+        // Création d'une variable pour transformer le JSON dans le local storage en objet JS
+        let savedProductLocalStorrage = JSON.parse(localStorage.getItem("product"));
+        
+        // Si déjà produit enregisté dans le local storage (si savedProductLocalStorrage != null alors == true)
+        if (savedProductLocalStorrage){
+            savedProductLocalStorrage.push(storrageObject);
+            localStorage.setItem("product", JSON.stringify(savedProductLocalStorrage))
+            console.log(savedProductLocalStorrage);
+        } 
+         
+        //  Si pas de produit enregistré dans le local storage (si savedProductLocalStorrage == null alors == false)
+        else {
+            // On crée un tableau vide
+            savedProductLocalStorrage = [];
+            // On y injecte l'objet
+            savedProductLocalStorrage.push(storrageObject);
+            // On crée la clé "product" et on l'envoie en format JSON dans le local storrage
+            localStorage.setItem("product", JSON.stringify(savedProductLocalStorrage))
+            console.log(savedProductLocalStorrage);
+        }
+
         } 
         
     })
+
 };
+
+
 
 addToCart ();
 
