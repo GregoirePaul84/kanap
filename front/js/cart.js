@@ -99,11 +99,13 @@ const displayCart = () => {
 
 displayCart ();
 
-// // Supprimer un produit
-// const deleteProducts = () => {
-//   document.querySelector(".deleteItem").addEventListener ("click", function () {
-//     console.log("supprimé");
-//   })
-// }
+// Supprimer un produit
+const deleteProduct = () => {
+  document.querySelector(".deleteItem").addEventListener ("click", function () {
+    let removeArticle = document.getElementById("cart__items");
+    let child = document.querySelector(".cart__item");
+    removeArticle.removeChild(child);
+  })
+}
 
-// deleteProducts ();
+deleteProduct ();

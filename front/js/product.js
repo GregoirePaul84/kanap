@@ -104,9 +104,10 @@ const addToCart = () => {
         
         // Si déjà produit enregisté dans le local storage (si savedProductLocalStorrage != null alors == true)
         if (savedProductLocalStorrage){
+            let foundProduct = savedProductLocalStorrage.find(p => p.id == idProduct);
             savedProductLocalStorrage.push(storrageObject);
             localStorage.setItem("product", JSON.stringify(savedProductLocalStorrage))
-            console.log(savedProductLocalStorrage);
+            console.log(savedProductLocalStorrage); 
         } 
          
         //  Si pas de produit enregistré dans le local storage (si savedProductLocalStorrage == null alors == false)
