@@ -101,10 +101,18 @@ displayCart ();
 
 // Supprimer un produit
 const deleteProduct = () => {
-  document.querySelector(".deleteItem").addEventListener ("click", function () {
-    let removeArticle = document.getElementById("cart__items");
-    let child = document.querySelector(".cart__item");
-    removeArticle.removeChild(child);
+  
+      const deleteItem = document.querySelectorAll(".deleteItem");
+      console.log(deleteItem);
+      deleteItem.forEach(el => {
+      el.addEventListener("click", function () {
+      let removeArticle = document.getElementById("cart__items");
+      let child = document.querySelector(".cart__item");
+      removeArticle.removeChild(child);
+      localStorage.removeItem("product");
+      console.log(deleteItem);
+      
+    })
   })
 }
 

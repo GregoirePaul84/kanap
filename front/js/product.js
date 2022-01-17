@@ -104,10 +104,36 @@ const addToCart = () => {
         
         // Si déjà produit enregisté dans le local storage (si savedProductLocalStorrage != null alors == true)
         if (savedProductLocalStorrage){
-            let foundProduct = savedProductLocalStorrage.find(p => p.id == idProduct);
+            // Si Id et Couleur déjà existants dans le tableau, on augmente la quantité voulue
+            const sameId = savedProductLocalStorrage.find((el) => el.id === idProduct && el.color === chosenColor);
+            
+            if (sameId) {
+    
+                /* On utilise parseInt pour convertir la chaîne de caractères en nombre entier
+                On additionne la quantité voulue dans storrageObject à la quantité déjà présente dans sameId */
+                let addQuantity = parseInt(storrageObject.quantity) + parseInt(sameId.quantity);
+                // On assigne la nouvelle quantité calculée
+                sameId.quantity = addQuantity;
+                localStorage.setItem("product", JSON.stringify(savedProductLocalStorrage));
+                if (storrageObject.quantity == 1) {
+                    alert (`Le produit ${productName} a été ajouté au panier en ${chosenQuantity} exemplaire`);
+                }
+                else {
+                    alert (`Le produit ${productName} a été ajouté au panier en ${chosenQuantity} exemplaires`);
+                    console.log(savedProductLocalStorrage);
+                }
+            } else {
             savedProductLocalStorrage.push(storrageObject);
             localStorage.setItem("product", JSON.stringify(savedProductLocalStorrage))
-            console.log(savedProductLocalStorrage); 
+                if (storrageObject.quantity == 1) {
+                    alert (`Le produit ${productName} a été ajouté au panier en ${chosenQuantity} exemplaire`);
+                }
+                else {
+                    alert (`Le produit ${productName} a été ajouté au panier en ${chosenQuantity} exemplaires`);
+                    console.log(savedProductLocalStorrage);
+                }
+            
+            }
         } 
          
         //  Si pas de produit enregistré dans le local storage (si savedProductLocalStorrage == null alors == false)
@@ -117,8 +143,14 @@ const addToCart = () => {
             // On y injecte l'objet
             savedProductLocalStorrage.push(storrageObject);
             // On crée la clé "product" et on le sérialise en format JSON dans le local storrage
-            localStorage.setItem("product", JSON.stringify(savedProductLocalStorrage))
-            console.log(savedProductLocalStorrage);
+            localStorage.setItem("product", JSON.stringify(savedProductLocalStorrage));
+            if (storrageObject.quantity == 1) {
+                alert (`Le produit ${productName} a été ajouté au panier en ${chosenQuantity} exemplaire`);
+            }
+            else {
+                alert (`Le produit ${productName} a été ajouté au panier en ${chosenQuantity} exemplaires`);
+                console.log(savedProductLocalStorrage);
+            }
         }
 
         } 
