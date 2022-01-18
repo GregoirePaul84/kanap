@@ -1,21 +1,57 @@
 
-// Récupération du local storage
+// Récupération du local storage en fichier JS
 let savedProductLocalStorrage = JSON.parse(localStorage.getItem("product"));
 console.table(savedProductLocalStorrage);
 
-// Affichage panier vide ou panier rempli
+// *********** Calcul des totaux de quantités et de prix *********** //
+
+const calculateBasket = () => {
+
+  // Affichage du nombre total de produits choisis
+  let totalQuantity = 0;
+  
+  // On utilise forEach pour itérer sur chaque produit et parseInt pour convertir la chaine de caractères en nombre
+  savedProductLocalStorrage.forEach(el => totalQuantity += parseInt(el.quantity));
+  console.log(totalQuantity);
+  
+  // On pointe vers l'ID qui affiche la quantité totale de produits
+  if (totalQuantity === undefined) {
+    document.getElementById("totalQuantity").innerText = "0";
+
+  }else {
+    document.getElementById("totalQuantity").innerText = `${totalQuantity}`;
+  }
+ 
+  // Affichage du prix total
+  let totalPrice = 0;
+  savedProductLocalStorrage.forEach(el => totalPrice += parseInt(el.price) * parseInt(el.quantity));
+  console.log(totalPrice);
+  
+  // On pointe vers l'ID qui affiche le prix total des produits
+  if (totalPrice === undefined) {
+    document.getElementById("totalPrice").innerText = `00` + ",00";
+  } else {
+    document.getElementById("totalPrice").innerText = `${totalPrice}` + ",00";
+  }
+  
+  
+  }
+
+// *********** Affichage du panier vide ou rempli *********** //
+
 const displayCart = () => {
 
   // Si panier vide
   if (savedProductLocalStorrage == null) {
     document.querySelector("#cartAndFormContainer h1").innerHTML = `<h1> Votre panier est vide!</p>`;
-
+    document.getElementById("totalQuantity").innerText = "0";
+    document.getElementById("totalPrice").innerText = `0` + ",00";
   }
 
   // Si panier rempli
   else {
 
-    // Création et insertion de l'élément article
+  // Création et insertion de l'élément article
   for (let j in savedProductLocalStorrage) {
     let createArticle = document.createElement("article");
     document.getElementById("cart__items").appendChild(createArticle);
@@ -93,6 +129,8 @@ const displayCart = () => {
   createDeleteP.innerText = "Supprimer";
   }
 
+  calculateBasket();
+
   }
   
 };
@@ -100,7 +138,8 @@ const displayCart = () => {
 displayCart ();
 
 
-// Supprimer un produit
+// *********** Suppression d'un produit depuis le panier *********** //
+
 const deleteProduct = () => {
   
       // On pointe sur tous les boutons supprimer
@@ -119,21 +158,23 @@ const deleteProduct = () => {
         localStorage.setItem("product", JSON.stringify(savedProductLocalStorrage));
         // Rafraichissement de la page pour mettre à jour la console
         location.reload();
-        // Suppression de la clé product du localstorage et rafraichissement de la page
+        // Suppression de la clé product du localstorage et recalcul du panier
         if (deleteItem.length == 1) {
           localStorage.clear();
-          location.reload();
+          calculateBasket();
+        } else {
+          calculateBasket();
         }
         
         }
         
         )}
-        
+
 }
 
 deleteProduct ();
 
-// Augmentation des quantités dans le localstorrage via le panier
+// *********** Ajustement des quantités dans le localstorrage via le panier *********** //
 
 const adjustQuantityCart = () => {
   // On pointe sur les inputs qui permettent de régler la quantité
@@ -146,27 +187,7 @@ const adjustQuantityCart = () => {
       savedProductLocalStorrage[index].quantity = btn.value;
       // On injecte la nouvelle valeur dans le local storage
       localStorage.setItem("product", JSON.stringify(savedProductLocalStorrage));
-
-      // Affichage du nombre total de produits choisis
-      savedProductLocalStorrage = JSON.parse(localStorage.getItem("product"));
-      let totalQuantity = 0;
-      
-      // On utilise forEach pour itérer sur chaque produit et parseInt pour convertir la chaine de caractères en nombre
-      savedProductLocalStorrage.forEach(el => totalQuantity += parseInt(el.quantity));
-      console.log(totalQuantity);
-      
-      // On pointe vers l'ID qui affiche la quantité totale de produits
-      document.getElementById("totalQuantity").innerText = `${totalQuantity}`;
-      
-      // Affichage du prix total
-      let totalPrice = 0;
-      savedProductLocalStorrage.forEach(el => totalPrice += parseInt(el.price) * parseInt(el.quantity));
-      console.log(totalPrice);
-      
-      // On pointe vers l'ID qui affiche le prix total des produits
-      document.getElementById("totalPrice").innerText = `${totalPrice}`;
-      
-
+      calculateBasket();
     })
   })
 }
