@@ -132,3 +132,20 @@ const deleteProduct = () => {
 }
 
 deleteProduct ();
+
+// Augmentation des quantités dans le localstorrage via le panier
+
+const adjustQuantityCart = () => {
+  // On pointe sur l'input qui permet de régler la quantité
+  const adjustQuantity = document.querySelectorAll(".itemQuantity");
+  adjustQuantity.forEach(function (btn, index) {
+    btn.addEventListener("change", function() {
+      savedProductLocalStorrage = JSON.parse(localStorage.getItem("product"));
+      savedProductLocalStorrage[index].quantity = btn.value;
+      console.log(savedProductLocalStorrage[index].quantity);
+      localStorage.setItem("product", JSON.stringify(savedProductLocalStorrage));
+    })
+  })
+}
+
+adjustQuantityCart();
