@@ -99,21 +99,36 @@ const displayCart = () => {
 
 displayCart ();
 
+
 // Supprimer un produit
 const deleteProduct = () => {
   
+      // On pointe sur tous les boutons supprimer
       const deleteItem = document.querySelectorAll(".deleteItem");
       console.log(deleteItem);
-      deleteItem.forEach(el => {
-      el.addEventListener("click", function () {
-      let removeArticle = document.getElementById("cart__items");
-      let child = document.querySelector(".cart__item");
-      removeArticle.removeChild(child);
-      localStorage.removeItem("product");
-      console.log(deleteItem);
-      
-    })
-  })
+      for (let l = 0; l < deleteItem.length; l++) {
+        deleteItem[l].addEventListener("click", (event) => {
+        event.preventDefault();
+        // Suppression de l'élément article du DOM
+        let articleDOM = deleteItem[l].closest("article");
+        articleDOM.remove();
+        // Suppression des produits du localstorage selon leur id ou couleur
+        let deleteById = savedProductLocalStorrage[l].id;
+        let deleteByColor = savedProductLocalStorrage[l].color;
+        savedProductLocalStorrage = savedProductLocalStorrage.filter(el => el.id != deleteById || el.color != deleteByColor);
+        localStorage.setItem("product", JSON.stringify(savedProductLocalStorrage));
+        // Rafraichissement de la page pour mettre à jour la console
+        location.reload();
+        // Suppression de la clé product du localstorage et rafraichissement de la page
+        if (deleteItem.length == 1) {
+          localStorage.clear();
+          location.reload();
+        }
+        
+        }
+        
+        )}
+        
 }
 
 deleteProduct ();
