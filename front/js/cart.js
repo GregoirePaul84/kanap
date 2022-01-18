@@ -136,16 +136,40 @@ deleteProduct ();
 // Augmentation des quantités dans le localstorrage via le panier
 
 const adjustQuantityCart = () => {
-  // On pointe sur l'input qui permet de régler la quantité
+  // On pointe sur les inputs qui permettent de régler la quantité
   const adjustQuantity = document.querySelectorAll(".itemQuantity");
+  // On utilise la méthode forEarch pour changer la quantité sur chaque élément du tableau
   adjustQuantity.forEach(function (btn, index) {
     btn.addEventListener("change", function() {
       savedProductLocalStorrage = JSON.parse(localStorage.getItem("product"));
+      // On attribue la valeur de input(btn.value) pour chaque quantité de chaque produit
       savedProductLocalStorrage[index].quantity = btn.value;
-      console.log(savedProductLocalStorrage[index].quantity);
+      // On injecte la nouvelle valeur dans le local storage
       localStorage.setItem("product", JSON.stringify(savedProductLocalStorrage));
+
+      // Affichage du nombre total de produits choisis
+      savedProductLocalStorrage = JSON.parse(localStorage.getItem("product"));
+      let totalQuantity = 0;
+      
+      // On utilise forEach pour itérer sur chaque produit et parseInt pour convertir la chaine de caractères en nombre
+      savedProductLocalStorrage.forEach(el => totalQuantity += parseInt(el.quantity));
+      console.log(totalQuantity);
+      
+      // On pointe vers l'ID qui affiche la quantité totale de produits
+      document.getElementById("totalQuantity").innerText = `${totalQuantity}`;
+      
+      // Affichage du prix total
+      let totalPrice = 0;
+      savedProductLocalStorrage.forEach(el => totalPrice += parseInt(el.price) * parseInt(el.quantity));
+      console.log(totalPrice);
+      
+      // On pointe vers l'ID qui affiche le prix total des produits
+      document.getElementById("totalPrice").innerText = `${totalPrice}`;
+      
+
     })
   })
 }
 
 adjustQuantityCart();
+
