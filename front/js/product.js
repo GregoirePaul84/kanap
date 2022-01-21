@@ -1,10 +1,10 @@
-// Extraction de l'ID
+// *********** Extraction de l'ID *********** //
 
 let str = window.location.href;
 let url = new URL(str);
 let idProduct = url.searchParams.get("id");
 
-// Récupération de chaque produit de L'API selon leur ID
+// *********** Récupération de chaque produit de L'API selon leur ID *********** //
 
 const fetchApiId = async () => {
     await fetch('http://localhost:3000/api/products/' + idProduct)
@@ -20,7 +20,8 @@ const fetchApiId = async () => {
 }
 
 
-// Intégration des produits uniques dans le DOM
+// *********** Intégration des produits uniques dans le DOM *********** //
+
 
 const displayItemId = (product) => {
 
@@ -56,7 +57,8 @@ const displayItemId = (product) => {
 
 fetchApiId ();
 
-// Ajout des produits sélectionnés dans le local storage
+// *********** Ajout des produits sélectionnés dans le local storage *********** //
+
 
 const addToCart = () => {
     
@@ -112,7 +114,7 @@ const addToCart = () => {
                 /* On utilise parseInt pour convertir la chaîne de caractères en nombre entier
                 On additionne la quantité voulue dans storrageObject à la quantité déjà présente dans sameId */
                 let addQuantity = parseInt(storrageObject.quantity) + parseInt(sameId.quantity);
-                // On assigne la nouvelle quantité calculée
+                // On assigne la nouvelle quantité calculée à sameId
                 sameId.quantity = addQuantity;
                 localStorage.setItem("product", JSON.stringify(savedProductLocalStorrage));
                 if (storrageObject.quantity == 1) {

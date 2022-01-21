@@ -1,4 +1,5 @@
-// Récupération des produits via l'URL de l'API
+// *********** Récupération des produits via l'URL de l'API *********** //
+
 
 const fetchApi = async () => {
     await fetch('http://localhost:3000/api/products')
@@ -15,7 +16,7 @@ const fetchApi = async () => {
 
 
 
-//  Intégration des produits dans le DOM
+// *********** Intégration des produits dans le DOM *********** //
 
 const displayItems = (products) => {
     let items = document.getElementById("items");

@@ -1,7 +1,6 @@
 
 // Récupération du local storage en fichier JS
 let savedProductLocalStorrage = JSON.parse(localStorage.getItem("product"));
-console.table(savedProductLocalStorrage);
 
 // *********** Calcul des totaux de quantités et de prix *********** //
 
@@ -46,6 +45,8 @@ const displayCart = () => {
     document.querySelector("#cartAndFormContainer h1").innerHTML = `<h1> Votre panier est vide!</p>`;
     document.getElementById("totalQuantity").innerText = "0";
     document.getElementById("totalPrice").innerText = `0` + ",00";
+    const formDiv = document.querySelector(".cart__order");
+    formDiv.remove();
   }
 
   // Si panier rempli
@@ -193,4 +194,166 @@ const adjustQuantityCart = () => {
 }
 
 adjustQuantityCart();
+
+// *********** Récupération des informations du formulaire *********** //
+
+// On pointe vers le formulaire, on accèdera à chaque input grâce aux attributs name
+const form = document.querySelector(".cart__order__form");
+
+// Caractères autorisés pour nom et prénom : Majuscules, minuscules, espaces, accents, tiret, point, apostrophre (min 2 - max 20 caractères)
+let regExName = new RegExp ("^[A-Za-z. 'àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ-]{2,20}$");
+let regExAdress = new RegExp ("^[A-Za-z0-9. 'àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ-]{2,30}$");
+let regExCity = new RegExp ("^[A-Za-z. 'àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ-]{2,20}$");
+let regExEmail = new RegExp ("^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$");
+
+// *********** Vérification des données du PRENOM *********** //
+
+// Ecoute du prénom et réglage de sa conformité 
+form.firstName.addEventListener("change", function() {
+  validFirstName(this)
+});
+
+const validFirstName = (inputFirstName) => {
+
+  let firstNameTest = regExName.test(inputFirstName.value);
+  console.log(firstNameTest);
+
+  // Condition si le prénom indiqué par l'utilisateur est conforme ou non
+  if (firstNameTest == true) {
+    document.getElementById("firstNameErrorMsg").innerText = ``;
+    return true;
+  } else {
+    document.getElementById("firstNameErrorMsg").innerText = `Prénom non conforme`;
+    return false;
+  }
+}
+
+// *********** Vérification des données du NOM DE FAMILLE *********** //
+
+form.lastName.addEventListener("change", function() {
+  validLastName(this)
+});
+
+const validLastName = (inputLastName) => {
+
+  let lastNameTest = regExName.test(inputLastName.value);
+  console.log(lastNameTest);
+
+  // Condition si le nom indiqué par l'utilisateur est conforme ou non
+  if (lastNameTest == true) {
+    document.getElementById("lastNameErrorMsg").innerText = ``;
+    return true;
+  } else {
+    document.getElementById("lastNameErrorMsg").innerText = `Nom non conforme`;
+    return false;
+  }
+}
+
+// *********** Vérification des données de l'ADRESSE *********** //
+
+form.address.addEventListener("change", function() {
+  validAddress(this)
+});
+
+const validAddress = (inputAddress) => {
+
+  let validAddressTest = regExAdress.test(inputAddress.value);
+  console.log(validAddressTest);
+
+  // Condition si l'adresse indiquée par l'utilisateur est conforme ou non
+  if (validAddressTest == true) {
+    document.getElementById("addressErrorMsg").innerText = ``;
+    return true;
+  } else {
+    document.getElementById("addressErrorMsg").innerText = `L'adresse semble erronée`;
+    return false;
+  }
+}
+
+// *********** Vérification des données de la VILLE *********** //
+
+form.city.addEventListener("change", function() {
+  validCity(this)
+});
+
+const validCity = (inputCity) => {
+
+  let validCityTest = regExCity.test(inputCity.value);
+  console.log(validCityTest);
+
+  // Condition si la ville indiquée par l'utilisateur est conforme ou non
+  if (validCityTest == true) {
+    document.getElementById("cityErrorMsg").innerText = ``;
+    return true;
+  } else {
+    document.getElementById("cityErrorMsg").innerText = `Le nom de la ville semble erroné`;
+    return false;
+  }
+}
+
+// *********** Vérification des données de l'EMAIL *********** //
+
+form.email.addEventListener("change", function() {
+  validEmail(this)
+});
+
+const validEmail = (inputEmail) => {
+  let validEmailTest = regExEmail.test(inputEmail.value);
+  console.log(validEmailTest);
+  
+  // Condition si l'email indiqué par l'utilisateur est conforme ou non
+  if (validEmailTest == true) {
+    document.getElementById("emailErrorMsg").innerText = ``;
+    return true;
+  } else {
+    document.getElementById("emailErrorMsg").innerText = `Adresse mail non conforme`;
+    return false;
+  }
+  
+}
+
+//*********** Soumission du formulaire *********** //
+
+form.addEventListener("submit", function(e) {
+  e.preventDefault();
+  if (validFirstName(form.firstName) && validLastName(form.lastName) && validAddress(form.address) && validCity(form.city) && validEmail(form.email)) {
+    
+    console.log("formulaire valide");
+
+    // Si formulaire valide on créer un tableau et on y intègre les id des produits choisis par le client
+    let productId = [];
+    for (let p in savedProductLocalStorrage) {
+      productId.push(savedProductLocalStorrage[p].id)
+    };
+
+    // On créer un objet rassemblant toutes les informations du client, ainsi que l'id des produits
+    let orderInfo = {
+      contact: {
+      firstName: form.firstName.value,
+      lastName: form.lastName.value,
+      address: form.address.value,
+      city: form.city.value,
+      email: form.email.value
+      },
+      products: productId
+    };
+    
+    console.log(orderInfo);
+
+    //*********** Envoi des données à l'API *********** //
+
+    fetch("http://localhost:3000/api/products/order", {
+      method: "POST",
+      headers: { 
+    'Accept': 'application/json', 
+    'Content-Type': 'application/json' 
+    },
+      body: JSON.stringify(orderInfo)
+});
+
+  } else {
+    console.log("formulaire non valide");
+  }
+  
+});
 
