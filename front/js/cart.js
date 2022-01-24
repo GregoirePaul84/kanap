@@ -200,10 +200,13 @@ adjustQuantityCart();
 // On pointe vers le formulaire, on accèdera à chaque input grâce aux attributs name
 const form = document.querySelector(".cart__order__form");
 
-// Caractères autorisés pour nom et prénom : Majuscules, minuscules, espaces, accents, tiret, point, apostrophre (min 2 - max 20 caractères)
+// Caractères autorisés pour nom et prénom 
 let regExName = new RegExp ("^[A-Za-z. 'àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ-]{2,20}$");
+// Caractères autorisés pour l'adresse
 let regExAdress = new RegExp ("^[A-Za-z0-9. 'àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ-]{2,30}$");
+// Caractères autorisés pour la ville
 let regExCity = new RegExp ("^[A-Za-z. 'àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ-]{2,20}$");
+// Caractères autorisés pour l'email
 let regExEmail = new RegExp ("^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$");
 
 // *********** Vérification des données du PRENOM *********** //
@@ -265,7 +268,7 @@ const validAddress = (inputAddress) => {
     document.getElementById("addressErrorMsg").innerText = ``;
     return true;
   } else {
-    document.getElementById("addressErrorMsg").innerText = `L'adresse semble erronée`;
+    document.getElementById("addressErrorMsg").innerText = `Veuillez saisir une adresse valide`;
     return false;
   }
 }
@@ -342,7 +345,7 @@ form.addEventListener("submit", function(e) {
 
     //*********** Envoi des données à l'API *********** //
 
-    fetch("http://localhost:3000/api/products/order", {
+    const postApi = fetch("http://localhost:3000/api/products/order", {
       method: "POST",
       headers: { 
     'Accept': 'application/json', 
@@ -350,6 +353,20 @@ form.addEventListener("submit", function(e) {
     },
       body: JSON.stringify(orderInfo)
 });
+    postApi.then(async (response) => {
+      try {
+        const data = await response.json();
+        console.log(data);
+        localStorage.clear();
+        // Récupération du numéro de commande et création d'une clé "orderId" dans le localstorage
+        localStorage.setItem("orderId", data.orderId);
+        // On passe l'ID de commande dans l'URL
+        document.location.href = `./confirmation.html?id=${data.orderId}`;
+
+      } catch (e){
+        console.log(e);
+      }
+    })
 
   } else {
     console.log("formulaire non valide");
