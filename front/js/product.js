@@ -73,16 +73,12 @@ const addToCart = () => {
         // Alerte si couleur non choisie
         if (chosenColor == 0) {
             alert("Veuillez choisir une couleur disponible");
-        } else {
-            // return;
-        };
+        } 
 
         // Alerte si quantité non conforme
         if (chosenQuantity < 1 || chosenQuantity > 100) {
             alert("Veuillez choisir une quantité entre 1 et 100");
-        } else {
-            // return;
-        };
+        } 
 
         // Si la couleur est la quantité sont conformes
 
