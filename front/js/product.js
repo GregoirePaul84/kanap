@@ -86,7 +86,7 @@ const addToCart = () => {
 
         // Si la couleur est la quantité sont conformes
 
-        if (chosenColor && chosenQuantity != null) {
+        if (chosenColor && chosenQuantity != 0 && chosenColor && chosenQuantity <= 100 ) {
         // Création d'un objet stocké dans le local storage
             
         let storrageObject = {
