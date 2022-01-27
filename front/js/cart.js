@@ -11,7 +11,6 @@ const calculateBasket = () => {
   
   // On utilise forEach pour itérer sur chaque produit et parseInt pour convertir la chaine de caractères en nombre
   savedProductLocalStorrage.forEach(el => totalQuantity += parseInt(el.quantity));
-  console.log(totalQuantity);
   
   // On pointe vers l'ID qui affiche la quantité totale de produits
   if (totalQuantity === undefined) {
@@ -24,7 +23,6 @@ const calculateBasket = () => {
   // Affichage du prix total
   let totalPrice = 0;
   savedProductLocalStorrage.forEach(el => totalPrice += parseInt(el.price) * parseInt(el.quantity));
-  console.log(totalPrice);
   
   // On pointe vers l'ID qui affiche le prix total des produits
   if (totalPrice === undefined) {
