@@ -34,7 +34,7 @@ const calculateBasket = () => {
   }
   
   
-  }
+}
 
 // *********** Affichage du panier vide ou rempli *********** //
 
@@ -131,52 +131,42 @@ const displayCart = () => {
 
   calculateBasket();
 
+  // *********** Suppression d'un produit depuis le panier *********** //
+
+  const deleteProduct = () => {
+  
+  // On pointe sur tous les boutons supprimer
+  const deleteItem = document.querySelectorAll(".deleteItem");
+  console.log(deleteItem);
+  for (let l = 0; l < deleteItem.length; l++) {
+    deleteItem[l].addEventListener("click", () => {
+      
+      // Suppression de l'élément article du DOM
+      let articleDOM = deleteItem[l].closest("article");
+      articleDOM.remove();
+      // Suppression des produits du localstorage selon leur id et couleur
+      let deleteById = savedProductLocalStorrage[l].id;
+      let deleteByColor = savedProductLocalStorrage[l].color;
+      savedProductLocalStorrage = savedProductLocalStorrage.filter(el => el.id != deleteById || el.color != deleteByColor);
+      localStorage.setItem("product", JSON.stringify(savedProductLocalStorrage));
+      location.reload();
+      // Si plus de produits, suppression de la clé product du localstorage et recalcul du panier
+      if (deleteItem.length == 1) {
+        localStorage.clear();
+        calculateBasket();
+      } else {
+      calculateBasket();
+      }
+    
+    })
   }
-  
-};
+  }
 
-displayCart ();
+  deleteProduct ();
 
+  // *********** Ajustement des quantités dans le localstorrage via le panier *********** //
 
-// *********** Suppression d'un produit depuis le panier *********** //
-
-const deleteProduct = () => {
-  
-      // On pointe sur tous les boutons supprimer
-      const deleteItem = document.querySelectorAll(".deleteItem");
-      console.log(deleteItem);
-      for (let l = 0; l < deleteItem.length; l++) {
-        deleteItem[l].addEventListener("click", (event) => {
-        event.preventDefault();
-        // Suppression de l'élément article du DOM
-        let articleDOM = deleteItem[l].closest("article");
-        articleDOM.remove();
-        // Suppression des produits du localstorage selon leur id ou couleur
-        let deleteById = savedProductLocalStorrage[l].id;
-        let deleteByColor = savedProductLocalStorrage[l].color;
-        savedProductLocalStorrage = savedProductLocalStorrage.filter(el => el.id != deleteById || el.color != deleteByColor);
-        localStorage.setItem("product", JSON.stringify(savedProductLocalStorrage));
-        // Rafraichissement de la page pour mettre à jour la console
-        location.reload();
-        // Suppression de la clé product du localstorage et recalcul du panier
-        if (deleteItem.length == 1) {
-          localStorage.clear();
-          calculateBasket();
-        } else {
-          calculateBasket();
-        }
-        
-        }
-        
-        )}
-
-}
-
-deleteProduct ();
-
-// *********** Ajustement des quantités dans le localstorrage via le panier *********** //
-
-const adjustQuantityCart = () => {
+  const adjustQuantityCart = () => {
   // On pointe sur les inputs qui permettent de régler la quantité
   const adjustQuantity = document.querySelectorAll(".itemQuantity");
   // On utilise la méthode forEarch pour changer la quantité sur chaque élément du tableau
@@ -190,32 +180,32 @@ const adjustQuantityCart = () => {
       calculateBasket();
     })
   })
-}
+  }
 
-adjustQuantityCart();
+  adjustQuantityCart();
 
-// *********** Récupération des informations du formulaire *********** //
+  // *********** Récupération des informations du formulaire *********** //
 
-// On pointe vers le formulaire, on accèdera à chaque input grâce aux attributs name
-const form = document.querySelector(".cart__order__form");
+  // On pointe vers le formulaire, on accèdera à chaque input grâce aux attributs name
+  const form = document.querySelector(".cart__order__form");
 
-// Caractères autorisés pour nom et prénom 
-let regExName = new RegExp ("^[A-Za-z. 'àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ-]{2,20}$");
-// Caractères autorisés pour l'adresse
-let regExAdress = new RegExp ("^[A-Za-z0-9. 'àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ-]{2,30}$");
-// Caractères autorisés pour la ville
-let regExCity = new RegExp ("^[A-Za-z. 'àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ-]{2,20}$");
-// Caractères autorisés pour l'email
-let regExEmail = new RegExp ("^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$");
+  // Caractères autorisés pour nom et prénom 
+  let regExName = new RegExp ("^[A-Za-z. 'àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ-]{2,20}$");
+  // Caractères autorisés pour l'adresse
+  let regExAdress = new RegExp ("^[A-Za-z0-9. 'àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ-]{2,30}$");
+  // Caractères autorisés pour la ville
+  let regExCity = new RegExp ("^[A-Za-z. 'àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ-]{2,20}$");
+  // Caractères autorisés pour l'email
+  let regExEmail = new RegExp ("^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$");
 
-// *********** Vérification des données du PRENOM *********** //
+  // *********** Vérification des données du PRENOM *********** //
 
-// Ecoute du prénom et réglage de sa conformité 
-form.firstName.addEventListener("change", function() {
-  validFirstName(this)
-});
+  // Ecoute du prénom et réglage de sa conformité 
+  form.firstName.addEventListener("change", function() {
+    validFirstName(this)
+  });
 
-const validFirstName = (inputFirstName) => {
+  const validFirstName = (inputFirstName) => {
 
   let firstNameTest = regExName.test(inputFirstName.value);
   console.log(firstNameTest);
@@ -228,39 +218,39 @@ const validFirstName = (inputFirstName) => {
     document.getElementById("firstNameErrorMsg").innerText = `Prénom non conforme`;
     return false;
   }
-}
-
-// *********** Vérification des données du NOM DE FAMILLE *********** //
-
-form.lastName.addEventListener("change", function() {
-  validLastName(this)
-});
-
-const validLastName = (inputLastName) => {
-
-  let lastNameTest = regExName.test(inputLastName.value);
-  console.log(lastNameTest);
-
-  // Condition si le nom indiqué par l'utilisateur est conforme ou non
-  if (lastNameTest == true) {
-    document.getElementById("lastNameErrorMsg").innerText = ``;
-    return true;
-  } else {
-    document.getElementById("lastNameErrorMsg").innerText = `Nom non conforme`;
-    return false;
   }
-}
 
-// *********** Vérification des données de l'ADRESSE *********** //
+  // *********** Vérification des données du NOM DE FAMILLE *********** //
 
-form.address.addEventListener("change", function() {
-  validAddress(this)
-});
+  form.lastName.addEventListener("change", function() {
+    validLastName(this)
+  });
 
-const validAddress = (inputAddress) => {
+  const validLastName = (inputLastName) => {
 
-  let validAddressTest = regExAdress.test(inputAddress.value);
-  console.log(validAddressTest);
+    let lastNameTest = regExName.test(inputLastName.value);
+    console.log(lastNameTest);
+
+    // Condition si le nom indiqué par l'utilisateur est conforme ou non
+    if (lastNameTest == true) {
+      document.getElementById("lastNameErrorMsg").innerText = ``;
+      return true;
+    } else {
+      document.getElementById("lastNameErrorMsg").innerText = `Nom non conforme`;
+      return false;
+    }
+  }
+
+  // *********** Vérification des données de l'ADRESSE *********** //
+
+  form.address.addEventListener("change", function() {
+    validAddress(this)
+  });
+
+  const validAddress = (inputAddress) => {
+
+    let validAddressTest = regExAdress.test(inputAddress.value);
+    console.log(validAddressTest);
 
   // Condition si l'adresse indiquée par l'utilisateur est conforme ou non
   if (validAddressTest == true) {
@@ -270,106 +260,115 @@ const validAddress = (inputAddress) => {
     document.getElementById("addressErrorMsg").innerText = `Veuillez saisir une adresse valide`;
     return false;
   }
-}
-
-// *********** Vérification des données de la VILLE *********** //
-
-form.city.addEventListener("change", function() {
-  validCity(this)
-});
-
-const validCity = (inputCity) => {
-
-  let validCityTest = regExCity.test(inputCity.value);
-  console.log(validCityTest);
-
-  // Condition si la ville indiquée par l'utilisateur est conforme ou non
-  if (validCityTest == true) {
-    document.getElementById("cityErrorMsg").innerText = ``;
-    return true;
-  } else {
-    document.getElementById("cityErrorMsg").innerText = `Le nom de la ville semble erroné`;
-    return false;
   }
-}
 
-// *********** Vérification des données de l'EMAIL *********** //
+  // *********** Vérification des données de la VILLE *********** //
 
-form.email.addEventListener("change", function() {
-  validEmail(this)
-});
+  form.city.addEventListener("change", function() {
+    validCity(this)
+  });
 
-const validEmail = (inputEmail) => {
-  let validEmailTest = regExEmail.test(inputEmail.value);
-  console.log(validEmailTest);
-  
-  // Condition si l'email indiqué par l'utilisateur est conforme ou non
-  if (validEmailTest == true) {
-    document.getElementById("emailErrorMsg").innerText = ``;
-    return true;
-  } else {
-    document.getElementById("emailErrorMsg").innerText = `Adresse mail non conforme`;
-    return false;
+  const validCity = (inputCity) => {
+
+    let validCityTest = regExCity.test(inputCity.value);
+    console.log(validCityTest);
+
+    // Condition si la ville indiquée par l'utilisateur est conforme ou non
+    if (validCityTest == true) {
+      document.getElementById("cityErrorMsg").innerText = ``;
+      return true;
+    } else {
+      document.getElementById("cityErrorMsg").innerText = `Le nom de la ville semble erroné`;
+      return false;
+    }
   }
-  
-}
 
-//*********** Soumission du formulaire *********** //
+  // *********** Vérification des données de l'EMAIL *********** //
 
-form.addEventListener("submit", function(e) {
-  e.preventDefault();
-  if (validFirstName(form.firstName) && validLastName(form.lastName) && validAddress(form.address) && validCity(form.city) && validEmail(form.email)) {
-    
-    console.log("formulaire valide");
+  form.email.addEventListener("change", function() {
+    validEmail(this)
+  });
 
-    // Si formulaire valide on créer un tableau et on y intègre les id des produits choisis par le client
-    let productId = [];
-    for (let p in savedProductLocalStorrage) {
-      productId.push(savedProductLocalStorrage[p].id)
-    };
+  const validEmail = (inputEmail) => {
+    let validEmailTest = regExEmail.test(inputEmail.value);
+    console.log(validEmailTest);
 
-    // On créer un objet rassemblant toutes les informations du client, ainsi que l'id des produits
-    let orderInfo = {
-      contact: {
-      firstName: form.firstName.value,
-      lastName: form.lastName.value,
-      address: form.address.value,
-      city: form.city.value,
-      email: form.email.value
-      },
-      products: productId
-    };
-    
-    console.log(orderInfo);
-
-    //*********** Envoi des données à l'API *********** //
-
-    const postApi = fetch("http://localhost:3000/api/products/order", {
-      method: "POST",
-      headers: { 
-    'Accept': 'application/json', 
-    'Content-Type': 'application/json' 
-    },
-      body: JSON.stringify(orderInfo)
-});
-    postApi.then(async (response) => {
-      try {
-        const data = await response.json();
-        console.log(data);
-        localStorage.clear();
-        // Récupération du numéro de commande et création d'une clé "orderId" dans le localstorage
-        localStorage.setItem("orderId", data.orderId);
-        // On passe l'ID de commande dans l'URL
-        document.location.href = `./confirmation.html?id=${data.orderId}`;
-
-      } catch (e){
-        console.log(e);
-      }
-    })
-
-  } else {
-    console.log("formulaire non valide");
+    // Condition si l'email indiqué par l'utilisateur est conforme ou non
+    if (validEmailTest == true) {
+      document.getElementById("emailErrorMsg").innerText = ``;
+      return true;
+    } else {
+      document.getElementById("emailErrorMsg").innerText = `Adresse mail non conforme`;
+      return false;
+    }
   }
+
+  //*********** Soumission du formulaire *********** //
+
+  form.addEventListener("submit", function(e) {
+    e.preventDefault();
+    if (validFirstName(form.firstName) && validLastName(form.lastName) && validAddress(form.address) && validCity(form.city) && validEmail(form.email)) {
+
+      console.log("formulaire valide");
+
+      // Si formulaire valide on créer un tableau et on y intègre les id des produits choisis par le client
+      let productId = [];
+      for (let p in savedProductLocalStorrage) {
+        productId.push(savedProductLocalStorrage[p].id)
+      };
+
+      // On créer un objet rassemblant toutes les informations du client, ainsi que l'id des produits
+      let orderInfo = {
+        contact: {
+          firstName: form.firstName.value,
+          lastName: form.lastName.value,
+          address: form.address.value,
+          city: form.city.value,
+          email: form.email.value
+        },
+        products: productId
+      };
+
+      console.log(orderInfo);
+
+      //*********** Envoi des données à l'API *********** //
+
+      const postApi = fetch("http://localhost:3000/api/products/order", {
+        method: "POST",
+        headers: { 
+          'Accept': 'application/json', 
+          'Content-Type': 'application/json' 
+        },
+        body: JSON.stringify(orderInfo)
+      });
+
+      postApi.then(async (response) => {
+        try {
+          const data = await response.json();
+          console.log(data);
+          localStorage.clear();
+          // Récupération du numéro de commande et création d'une clé "orderId" dans le localstorage
+          localStorage.setItem("orderId", data.orderId);
+          // On passe l'ID de commande dans l'URL
+          document.location.href = `./confirmation.html?id=${data.orderId}`;
+
+        } catch (e){
+          console.log(e);
+        }
+      })
+
+    } else {
+      console.log("formulaire non valide");
+    }
+
+  });
+
+
+}
   
-});
+};
+
+displayCart ();
+
+
 

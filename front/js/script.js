@@ -11,7 +11,7 @@ const fetchApi = async () => {
         console.log(products)
         displayItems(products)
     })
-    .catch((error) => alert("Récupération des données de l'API impossible"));
+    .catch((e) => alert("Récupération des données de l'API impossible"));
 };
 
 
