@@ -9,8 +9,8 @@ let idProduct = url.searchParams.get("id");
 
 // *********** Récupération de chaque produit de L'API selon leur ID *********** //
 
-const fetchApiId = async () => {
-    await fetch('http://localhost:3000/api/products/' + idProduct)
+const fetchApiId = () => {
+    fetch('http://localhost:3000/api/products/' + idProduct)
     .then((response) => {
         return response.json();
     })

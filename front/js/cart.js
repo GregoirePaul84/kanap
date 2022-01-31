@@ -188,7 +188,7 @@ const displayCart = () => {
     btn.addEventListener("change", function() {
       savedProductLocalStorrage = JSON.parse(localStorage.getItem("product"));
       // On attribue la valeur de input(btn.value) pour chaque quantité de chaque produit
-      savedProductLocalStorrage[index].quantity = btn.value;
+      savedProductLocalStorrage[index].quantity = parseInt(btn.value,10);
       // On injecte la nouvelle valeur dans le local storage
       localStorage.setItem("product", JSON.stringify(savedProductLocalStorrage));
       if (btn.value <= 1) {
