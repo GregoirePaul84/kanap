@@ -10,19 +10,20 @@ const calculateBasket = () => {
   let totalQuantity = 0;
   
   // On utilise forEach pour itérer sur chaque produit et parseInt pour convertir la chaine de caractères en nombre
-  savedProductLocalStorrage.forEach(el => totalQuantity += parseInt(el.quantity));
+  savedProductLocalStorrage.forEach(el => totalQuantity += parseInt(el.quantity,10));
   
   // On pointe vers l'ID qui affiche la quantité totale de produits
   if (totalQuantity === undefined) {
     document.getElementById("totalQuantity").innerText = "0";
-
+    document.getElementById("totalPlural").innerHTML = "";
   }else {
+    
     document.getElementById("totalQuantity").innerText = `${totalQuantity}`;
   }
  
   // Affichage du prix total
   let totalPrice = 0;
-  savedProductLocalStorrage.forEach(el => totalPrice += parseInt(el.price) * parseInt(el.quantity));
+  savedProductLocalStorrage.forEach(el => totalPrice += parseInt(el.price,10) * parseInt(el.quantity,10));
   
   // On pointe vers l'ID qui affiche le prix total des produits
   if (totalPrice === undefined) {
@@ -30,16 +31,27 @@ const calculateBasket = () => {
   } else {
     document.getElementById("totalPrice").innerText = `${totalPrice}` + ",00";
   }
-  
+  if (totalQuantity > 1) {
+    document.getElementById("totalPlural").innerHTML = "s";
+  }
   
 }
 
 // *********** Affichage du panier vide ou rempli *********** //
+function countArticle () {
+  let count = 0;
+  for (let p in savedProductLocalStorrage) {
+    let product = savedProductLocalStorrage[p];
+    count += product.quantity
+  }
 
+  return count;
+}
 const displayCart = () => {
 
   // Si panier vide
   if (savedProductLocalStorrage == null) {
+    document.getElementById("totalPlural").innerHTML = "";
     document.querySelector("#cartAndFormContainer h1").innerHTML = `<h1> Votre panier est vide!</p>`;
     document.getElementById("totalQuantity").innerText = "0";
     document.getElementById("totalPrice").innerText = `0` + ",00";
@@ -49,7 +61,11 @@ const displayCart = () => {
 
   // Si panier rempli
   else {
-
+    if (countArticle() > 1) {
+      document.getElementById("totalPlural").innerHTML = "s";
+    }
+    
+    console.log(savedProductLocalStorrage);
   // Création et insertion de l'élément article
   for (let j in savedProductLocalStorrage) {
     let createArticle = document.createElement("article");
@@ -175,6 +191,9 @@ const displayCart = () => {
       savedProductLocalStorrage[index].quantity = btn.value;
       // On injecte la nouvelle valeur dans le local storage
       localStorage.setItem("product", JSON.stringify(savedProductLocalStorrage));
+      if (btn.value <= 1) {
+        document.getElementById("totalPlural").innerHTML = "";
+      }
       calculateBasket();
     })
   })

@@ -12,7 +12,6 @@ let idProduct = url.searchParams.get("id");
 const fetchApiId = async () => {
     await fetch('http://localhost:3000/api/products/' + idProduct)
     .then((response) => {
-        console.log(response)
         return response.json();
     })
     .then((product) => {
@@ -68,7 +67,7 @@ const addToCart = () => {
     
     document.getElementById("addToCart").addEventListener("click", function () {
         let chosenColor = document.getElementById("colors").value;
-        let chosenQuantity = document.getElementById("quantity").value;
+        let chosenQuantity = parseInt(document.getElementById("quantity").value,10);
         let productImg = document.querySelector(".item__img img").getAttribute("src");
         let productAlt = document.querySelector(".item__img img").getAttribute("alt");
         let productName = document.getElementById("title").innerText;

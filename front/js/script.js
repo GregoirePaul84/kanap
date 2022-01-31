@@ -1,8 +1,8 @@
 // *********** Récupération des produits via l'URL de l'API *********** //
 
 
-const fetchApi = async () => {
-    await fetch('http://localhost:3000/api/products')
+const fetchApi = () => {
+    fetch('http://localhost:3000/api/products')
     .then((response) => {
         console.log("Récupération des produits de l'API")
         return response.json();
