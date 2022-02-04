@@ -22,7 +22,6 @@ const fetchApiId = () => {
     .catch ((error) => alert("Récupération du produit impossible"));
 }
 
-
 // *********** Intégration des informations produit dans le DOM *********** //
 
 
@@ -62,8 +61,7 @@ fetchApiId ();
 
 // *********** Ajout des produits sélectionnés dans le local storage *********** //
 
-
-const addToCart = () => {
+const addToCart = (product) => {
     
     document.getElementById("addToCart").addEventListener("click", function () {
         let chosenColor = document.getElementById("colors").value;
@@ -72,6 +70,14 @@ const addToCart = () => {
         let productAlt = document.querySelector(".item__img img").getAttribute("alt");
         let productName = document.getElementById("title").innerText;
         let productPrice = document.getElementById("price").innerText;
+
+        const popupSingular = () => {
+            alert (`Le produit ${productName} a été ajouté au panier en ${chosenQuantity} exemplaire`);
+        }
+        
+        const popupPlural = () => {
+            alert (`Le produit ${productName} a été ajouté au panier en ${chosenQuantity} exemplaires`);
+        }
 
         // Alerte si couleur non choisie
         if (chosenColor == 0) {
@@ -113,16 +119,15 @@ const addToCart = () => {
                     if (sameId) {
                         /* On utilise parseInt pour convertir la chaîne de caractères en nombre entier
                         On additionne la quantité voulue dans storrageObject à la quantité déjà présente dans sameId */
-                        let addQuantity = parseInt(storrageObject.quantity) + parseInt(sameId.quantity);
+                        let addQuantity = parseInt(storrageObject.quantity,10) + parseInt(sameId.quantity,10);
                         // On assigne la nouvelle quantité calculée à sameId
                         sameId.quantity = addQuantity;
                         localStorage.setItem("product", JSON.stringify(savedProductLocalStorrage));
                         if (storrageObject.quantity == 1) {
-                            alert (`Le produit ${productName} a été ajouté au panier en ${chosenQuantity} exemplaire`);
+                            popupSingular();
                         }
                         else {
-                            alert (`Le produit ${productName} a été ajouté au panier en ${chosenQuantity} exemplaires`);
-                            console.log(savedProductLocalStorrage);
+                            popupPlural();
                         }
                         
                     } else {
@@ -130,13 +135,11 @@ const addToCart = () => {
                         savedProductLocalStorrage.push(storrageObject);
                         localStorage.setItem("product", JSON.stringify(savedProductLocalStorrage))
                         if (storrageObject.quantity == 1) {
-                            alert (`Le produit ${productName} a été ajouté au panier en ${chosenQuantity} exemplaire`);
+                            popupSingular();
                         }
                         else {
-                            alert (`Le produit ${productName} a été ajouté au panier en ${chosenQuantity} exemplaires`);
-                        console.log(savedProductLocalStorrage);
+                            popupPlural();
                         }
-            
                     }
                 } 
 
@@ -149,11 +152,10 @@ const addToCart = () => {
                     // On crée la clé "product" et on le sérialise en format JSON dans le local storrage
                     localStorage.setItem("product", JSON.stringify(savedProductLocalStorrage));
                     if (storrageObject.quantity == 1) {
-                        alert (`Le produit ${productName} a été ajouté au panier en ${chosenQuantity} exemplaire`);
+                        popupSingular();
                     }
                     else {
-                        alert (`Le produit ${productName} a été ajouté au panier en ${chosenQuantity} exemplaires`);
-                        console.log(savedProductLocalStorrage);
+                        popupPlural();
                     }
                 }
         } 

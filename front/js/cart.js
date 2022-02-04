@@ -1,3 +1,27 @@
+const emptyCartH1 = () => {
+  document.querySelector("#cartAndFormContainer h1").innerHTML = `<h1> Votre panier est vide!</h1>`;
+}
+
+const deleteForm = () => {
+  const formDiv = document.querySelector(".cart__order");
+  formDiv.remove();
+}
+
+// *********** Récupération des produits de l'API *********** //
+
+const fetchApi = () => {
+  fetch('http://localhost:3000/api/products')
+  .then((response) => {
+      console.log("Récupération des produits de l'API")
+      return response.json();
+  })
+  .then((products) => {
+      console.log(products)
+  })
+  .catch((e) => alert("Récupération des données de l'API impossible"));
+};
+
+fetchApi();
 
 // Récupération du local storage en fichier JS
 let savedProductLocalStorrage = JSON.parse(localStorage.getItem("product"));
@@ -14,10 +38,10 @@ const calculateBasket = () => {
   
   // On pointe vers l'ID qui affiche la quantité totale de produits
   if (totalQuantity === undefined) {
+    emptyCartH1();
     document.getElementById("totalQuantity").innerText = "0";
     document.getElementById("totalPlural").innerHTML = "";
   }else {
-    
     document.getElementById("totalQuantity").innerText = `${totalQuantity}`;
   }
  
@@ -51,12 +75,11 @@ const displayCart = () => {
 
   // Si panier vide
   if (savedProductLocalStorrage == null) {
+    emptyCartH1();
     document.getElementById("totalPlural").innerHTML = "";
-    document.querySelector("#cartAndFormContainer h1").innerHTML = `<h1> Votre panier est vide!</p>`;
     document.getElementById("totalQuantity").innerText = "0";
     document.getElementById("totalPrice").innerText = `0` + ",00";
-    const formDiv = document.querySelector(".cart__order");
-    formDiv.remove();
+    deleteForm();
   }
 
   // Si panier rempli
@@ -152,24 +175,27 @@ const displayCart = () => {
   // On pointe sur tous les boutons supprimer
   const deleteItem = document.querySelectorAll(".deleteItem");
   console.log(deleteItem);
+
   for (let l = 0; l < deleteItem.length; l++) {
     deleteItem[l].addEventListener("click", () => {
       
       // Suppression de l'élément article du DOM
       let articleDOM = deleteItem[l].closest("article");
       articleDOM.remove();
+      console.log(deleteItem.length);
       // Suppression des produits du localstorage selon leur id et couleur
       let deleteById = savedProductLocalStorrage[l].id;
       let deleteByColor = savedProductLocalStorrage[l].color;
       savedProductLocalStorrage = savedProductLocalStorrage.filter(el => el.id != deleteById || el.color != deleteByColor);
       localStorage.setItem("product", JSON.stringify(savedProductLocalStorrage));
-      location.reload();
       // Si plus de produits, suppression de la clé product du localstorage et recalcul du panier
       if (deleteItem.length == 1) {
+        emptyCartH1();
         localStorage.clear();
+        deleteForm();
         calculateBasket();
       } else {
-      calculateBasket();
+        calculateBasket();
       }
     
     })
@@ -213,8 +239,8 @@ const displayCart = () => {
   // Caractères autorisés pour la ville
   let regExCity = new RegExp ("^[A-Za-z. 'àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ-]{2,20}$");
   // Caractères autorisés pour l'email
-  let regExEmail = new RegExp ("^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$");
-
+  let regExEmail = new RegExp ("^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,6}$|^$");
+  
   // *********** Vérification des données du PRENOM *********** //
 
   // Ecoute du prénom et réglage de sa conformité 
@@ -232,7 +258,7 @@ const displayCart = () => {
     document.getElementById("firstNameErrorMsg").innerText = ``;
     return true;
   } else {
-    document.getElementById("firstNameErrorMsg").innerText = `Prénom non conforme`;
+    document.getElementById("firstNameErrorMsg").innerText = `Votre prénom ne peut contenir que des lettres`;
     return false;
   }
   }
@@ -253,7 +279,7 @@ const displayCart = () => {
       document.getElementById("lastNameErrorMsg").innerText = ``;
       return true;
     } else {
-      document.getElementById("lastNameErrorMsg").innerText = `Nom non conforme`;
+      document.getElementById("lastNameErrorMsg").innerText = `Votre nom ne peut contenir que des lettres`;
       return false;
     }
   }
@@ -365,7 +391,7 @@ const displayCart = () => {
           console.log(data);
           localStorage.clear();
           // Récupération du numéro de commande et création d'une clé "orderId" dans le localstorage
-          localStorage.setItem("orderId", data.orderId);
+          // localStorage.setItem("orderId", data.orderId);
           // On passe l'ID de commande dans l'URL
           document.location.href = `./confirmation.html?id=${data.orderId}`;
 
