@@ -17,6 +17,7 @@ const fetchApiId = () => {
     .then((product) => {
         console.log(product);
         displayItemId(product);
+        addToCart(product);
         console.log("Récupération du produit de l'API");
     })
     .catch ((error) => alert("Récupération du produit impossible"));
@@ -69,14 +70,14 @@ const addToCart = (product) => {
         let productImg = document.querySelector(".item__img img").getAttribute("src");
         let productAlt = document.querySelector(".item__img img").getAttribute("alt");
         let productName = document.getElementById("title").innerText;
-        let productPrice = document.getElementById("price").innerText;
+        // let productPrice = document.getElementById("price").innerText;
 
         const popupSingular = () => {
-            alert (`Le produit ${productName} a été ajouté au panier en ${chosenQuantity} exemplaire`);
+            alert (`Le produit ${product.name} a été ajouté au panier en ${chosenQuantity} exemplaire`);
         }
         
         const popupPlural = () => {
-            alert (`Le produit ${productName} a été ajouté au panier en ${chosenQuantity} exemplaires`);
+            alert (`Le produit ${product.name} a été ajouté au panier en ${chosenQuantity} exemplaires`);
         }
 
         // Alerte si couleur non choisie
@@ -101,7 +102,7 @@ const addToCart = (product) => {
                 name : productName,
                 imgUrl : productImg,
                 altTxt : productAlt,
-                price : productPrice
+                // price : productPrice
             };
             
             console.log(storrageObject);
@@ -166,5 +167,5 @@ const addToCart = (product) => {
 
 
 
-addToCart ();
+// addToCart ();
 
