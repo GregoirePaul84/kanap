@@ -23,6 +23,7 @@ const fetchApiId = () => {
     .catch ((error) => alert("Récupération du produit impossible"));
 }
 
+
 // *********** Intégration des informations produit dans le DOM *********** //
 
 
@@ -62,23 +63,22 @@ fetchApiId ();
 
 // *********** Ajout des produits sélectionnés dans le local storage *********** //
 
+
 const addToCart = (product) => {
     
     document.getElementById("addToCart").addEventListener("click", function () {
         let chosenColor = document.getElementById("colors").value;
         let chosenQuantity = parseInt(document.getElementById("quantity").value,10);
-        let productImg = document.querySelector(".item__img img").getAttribute("src");
-        let productAlt = document.querySelector(".item__img img").getAttribute("alt");
-        let productName = document.getElementById("title").innerText;
-        // let productPrice = document.getElementById("price").innerText;
-
-        const popupSingular = () => {
-            alert (`Le produit ${product.name} a été ajouté au panier en ${chosenQuantity} exemplaire`);
-        }
         
-        const popupPlural = () => {
+        function popUpSingular() {
+            alert (`Le produit ${product.name} a été ajouté au panier en ${chosenQuantity} exemplaire`);
+    
+        };
+    
+        function popUpPlural() {
             alert (`Le produit ${product.name} a été ajouté au panier en ${chosenQuantity} exemplaires`);
-        }
+    
+        };
 
         // Alerte si couleur non choisie
         if (chosenColor == 0) {
@@ -96,13 +96,10 @@ const addToCart = (product) => {
             
             // Création d'un objet stocké dans le local storage
             let storrageObject = {
+                
                 id : idProduct,
                 quantity : chosenQuantity,
                 color : chosenColor,
-                name : productName,
-                imgUrl : productImg,
-                altTxt : productAlt,
-                // price : productPrice
             };
             
             console.log(storrageObject);
@@ -125,10 +122,10 @@ const addToCart = (product) => {
                         sameId.quantity = addQuantity;
                         localStorage.setItem("product", JSON.stringify(savedProductLocalStorrage));
                         if (storrageObject.quantity == 1) {
-                            popupSingular();
+                            popUpSingular();
                         }
                         else {
-                            popupPlural();
+                            popUpPlural();
                         }
                         
                     } else {
@@ -136,11 +133,12 @@ const addToCart = (product) => {
                         savedProductLocalStorrage.push(storrageObject);
                         localStorage.setItem("product", JSON.stringify(savedProductLocalStorrage))
                         if (storrageObject.quantity == 1) {
-                            popupSingular();
+                            popUpSingular();
                         }
                         else {
-                            popupPlural();
+                            popUpPlural();
                         }
+            
                     }
                 } 
 
@@ -153,10 +151,10 @@ const addToCart = (product) => {
                     // On crée la clé "product" et on le sérialise en format JSON dans le local storrage
                     localStorage.setItem("product", JSON.stringify(savedProductLocalStorrage));
                     if (storrageObject.quantity == 1) {
-                        popupSingular();
+                        popUpSingular();
                     }
                     else {
-                        popupPlural();
+                        popUpPlural();
                     }
                 }
         } 
@@ -166,6 +164,4 @@ const addToCart = (product) => {
 };
 
 
-
-// addToCart ();
 
