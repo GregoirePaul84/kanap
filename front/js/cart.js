@@ -41,7 +41,7 @@ function deleteForm() {
 }
 
 // Si panier vide
-if (savedProductLocalStorrage.length == 0) {
+if (savedProductLocalStorrage == undefined || savedProductLocalStorrage.length == 0) {
   updateCartTitle(true);
   document.getElementById("totalPlural").innerHTML = "";
   document.querySelector("#cartAndFormContainer h1").innerHTML = `<h1> Votre panier est vide !</p>`;
@@ -203,9 +203,10 @@ else {
       
     }
 
-
+    setTimeout(calculateBasket, 1000);
     adjustQuantityCart();
     deleteProduct();
+    checkForm();
   }
 
 setTimeout(displayProducts, 1000);
@@ -526,15 +527,6 @@ function sendForm() {
   });
 }
 
-
-
-function init() {
-  setTimeout(calculateBasket, 1000)
-  checkForm();
-  
-}
-
-init();
 
 
 
