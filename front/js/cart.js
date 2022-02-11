@@ -11,12 +11,12 @@ function updateCartTitle(empty=false){
 }
 
 // Récupération du local storage en fichier JS
-let savedProductLocalStorrage = JSON.parse(localStorage.getItem("product"));
+let savedProductLocalStorage = JSON.parse(localStorage.getItem("product"));
 
 // Création de la variable idProduct pour récupérer les ID du local storage
 let idProduct = [];
-for (let id in savedProductLocalStorrage) {
-  idProduct.push(savedProductLocalStorrage[id].id);
+for (let id in savedProductLocalStorage) {
+  idProduct.push(savedProductLocalStorage[id].id);
 }
 console.log(idProduct);
 
@@ -27,8 +27,8 @@ let data = [];
 // *********** Affichage du panier vide ou rempli *********** //
 function countArticle () {
   let count = 0;
-  for (let p in savedProductLocalStorrage) {
-    let product = savedProductLocalStorrage[p];
+  for (let p in savedProductLocalStorage) {
+    let product = savedProductLocalStorage[p];
     count += product.quantity
   }
 
@@ -41,7 +41,7 @@ function deleteForm() {
 }
 
 // Si panier vide
-if (savedProductLocalStorrage == undefined) {
+if (savedProductLocalStorage == undefined) {
   updateCartTitle(true);
   document.getElementById("totalPlural").innerHTML = "";
   document.querySelector("#cartAndFormContainer h1").innerHTML = `<h1> Votre panier est vide !</p>`;
@@ -56,7 +56,7 @@ else {
     document.getElementById("totalPlural").innerHTML = "s";
   }
   
-  console.log(savedProductLocalStorrage);
+  console.log(savedProductLocalStorage);
   
   for (let h in idProduct) {
       
@@ -96,12 +96,12 @@ else {
       console.table(dataObject);
     }
 
-    for (let m in savedProductLocalStorrage) {
+    for (let m in savedProductLocalStorage) {
       
       let object2 = {
-        id : savedProductLocalStorrage[m].id,
-        quantity : savedProductLocalStorrage[m].quantity,
-        color : savedProductLocalStorrage[m].color
+        id : savedProductLocalStorage[m].id,
+        quantity : savedProductLocalStorage[m].quantity,
+        color : savedProductLocalStorage[m].color
       }
       storageObject.push(object2);
       console.log(storageObject);
@@ -206,7 +206,7 @@ else {
     adjustQuantityCart();
     deleteProduct();
     setTimeout(calculateBasket, 1000);
-    
+    checkForm();
   }
 
 setTimeout(displayProducts, 1000);
@@ -223,16 +223,16 @@ const calculateBasket = () => {
 
   // let allPrices = [];
   
-  for (let o in savedProductLocalStorrage) {
+  for (let o in savedProductLocalStorage) {
     // object3 = {
     //   price : data[o].price,
-    //   quantity : savedProductLocalStorrage[o].quantity,
-    //   id : savedProductLocalStorrage[o].id
+    //   quantity : savedProductLocalStorage[o].quantity,
+    //   id : savedProductLocalStorage[o].id
     
     // }
 
-    data[o].color = savedProductLocalStorrage[o].color;
-    data[o].quantity = savedProductLocalStorrage[o].quantity;
+    data[o].color = savedProductLocalStorage[o].color;
+    data[o].quantity = savedProductLocalStorage[o].quantity;
     
     // console.log(object3);
     // allPrices.push(object3);
@@ -250,7 +250,7 @@ const calculateBasket = () => {
   let totalQuantity = 0;
   
   // On utilise forEach pour itérer sur chaque produit et parseInt pour convertir la chaine de caractères en nombre
-  savedProductLocalStorrage.forEach(el => totalQuantity += parseInt(el.quantity,10));
+  savedProductLocalStorage.forEach(el => totalQuantity += parseInt(el.quantity,10));
   console.log(totalQuantity);
   // On pointe vers l'ID qui affiche le prix total des produits
   if (totalQuantity == 0) {
@@ -272,40 +272,51 @@ const calculateBasket = () => {
 
 
 // *********** Suppression d'un produit depuis le panier *********** //
+
 const deleteProduct = () => {
-  console.log(savedProductLocalStorrage);
+  console.log(savedProductLocalStorage);
   // On pointe sur tous les boutons supprimer
   const deleteItem = document.querySelectorAll(".deleteItem");
   console.log(deleteItem);
+
   for (let l = 0; l < deleteItem.length; l++) {
+
     deleteItem[l].addEventListener("click", () => {
       
-      // Suppression de l'élément article du DOM
-      let articleDOM = deleteItem[l].closest("article");
-      articleDOM.remove();
-      
       // Suppression des produits du localstorage selon leur id et couleur
-      let deleteById = savedProductLocalStorrage[l].id;
-      let deleteByColor = savedProductLocalStorrage[l].color;
-      savedProductLocalStorrage = savedProductLocalStorrage.filter(el => el.id != deleteById || el.color != deleteByColor);
-      localStorage.setItem("product", JSON.stringify(savedProductLocalStorrage));   
+      let deleteById = savedProductLocalStorage[l].id;
+      let deleteByColor = savedProductLocalStorage[l].color;
+      savedProductLocalStorage = savedProductLocalStorage.filter(el => el.id != deleteById || el.color != deleteByColor);
+      localStorage.setItem("product", JSON.stringify(savedProductLocalStorage));   
       
+      // Suppression des produits dans le tableau data
       let deleteIdData = data[l]._id;
       let deleteColorData = data[l].color;
       data = data.filter(el => el._id != deleteIdData || el.color != deleteColorData);
-      
+
+      // Suppression de l'élément article du DOM
+      let articleDOM = deleteItem[l].closest("article");
+      articleDOM.remove();
 
       // Si plus de produits, suppression de la clé product du localstorage et recalcul du panier
-      if (savedProductLocalStorrage.length == 0) {
-        console.log(savedProductLocalStorrage.length);
+      if (savedProductLocalStorage.length == 0) {
+        console.log(deleteItem.length);
+
+        console.log(savedProductLocalStorage.length);
         document.getElementById("totalPlural").innerHTML = "";
         localStorage.clear();
         calculateBasket();
         deleteForm();
-      
-      } else {
         
+      } else if (savedProductLocalStorage.length == 1) {
+        
+        document.getElementById("totalPlural").innerHTML = "";
         calculateBasket();
+
+      } else {
+       
+        calculateBasket();
+
       }
     
     })
@@ -315,7 +326,7 @@ const deleteProduct = () => {
 
 
 
-// *********** Ajustement des quantités dans le localstorrage via le panier *********** //
+// *********** Ajustement des quantités dans le localstorage via le panier *********** //
 function adjustQuantityCart() {
   
   // On pointe sur les inputs qui permettent de régler la quantité
@@ -323,11 +334,11 @@ function adjustQuantityCart() {
   // On utilise la méthode forEarch pour changer la quantité sur chaque élément du tableau
   adjustQuantity.forEach(function (btn, index) {
     btn.addEventListener("change", function() {
-      savedProductLocalStorrage = JSON.parse(localStorage.getItem("product"));
+      savedProductLocalStorage = JSON.parse(localStorage.getItem("product"));
       // On attribue la valeur de input(btn.value) pour chaque quantité de chaque produit
-      savedProductLocalStorrage[index].quantity = parseInt(btn.value,10);
+      savedProductLocalStorage[index].quantity = parseInt(btn.value,10);
       // On injecte la nouvelle valeur dans le local storage
-      localStorage.setItem("product", JSON.stringify(savedProductLocalStorrage));
+      localStorage.setItem("product", JSON.stringify(savedProductLocalStorage));
       if (btn.value <= 1) {
         document.getElementById("totalPlural").innerHTML = "";
       }
@@ -484,15 +495,15 @@ function checkForm() {
   
 }
 
-checkForm();
+
 //*********** Soumission du formulaire *********** //
 
 function sendForm() {
     
     // Si formulaire valide on créer un tableau et on y intègre les id des produits choisis par le client
     let productId = [];
-    for (let p in savedProductLocalStorrage) {
-      productId.push(savedProductLocalStorrage[p].id)
+    for (let p in savedProductLocalStorage) {
+      productId.push(savedProductLocalStorage[p].id)
     };
 
     // On créer un objet rassemblant toutes les informations du client, ainsi que l'id des produits

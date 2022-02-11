@@ -6,7 +6,7 @@ const displayOrderId = () => {
     let url = new URL(str);
     let idProduct = url.searchParams.get("id");
     document.getElementById("orderId").innerText = idProduct;
-    // On vide le local storrage pour permettre au client de recommander de nouveau
+    // On vide le local storage pour permettre au client de recommander de nouveau
     localStorage.clear();
 }
 

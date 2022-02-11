@@ -95,33 +95,33 @@ const addToCart = (product) => {
         if (chosenColor && chosenQuantity != 0 && chosenColor && chosenQuantity <= 100 ) {
             
             // Création d'un objet stocké dans le local storage
-            let storrageObject = {
+            let storageObject = {
                 
                 id : idProduct,
                 quantity : chosenQuantity,
                 color : chosenColor,
             };
             
-            console.log(storrageObject);
+            console.log(storageObject);
 
             // Création d'une variable pour transformer le JSON dans le local storage en objet JS
-            let savedProductLocalStorrage = JSON.parse(localStorage.getItem("product"));
+            let savedProductLocalStorage = JSON.parse(localStorage.getItem("product"));
 
         
-                // Si déjà produit enregisté dans le local storage (si savedProductLocalStorrage != null alors == true)
-                if (savedProductLocalStorrage){
+                // Si déjà produit enregisté dans le local storage (si savedProductLocalStorage != null alors == true)
+                if (savedProductLocalStorage){
 
                 // Si Id et Couleur déjà existants dans le tableau, on augmente la quantité voulue
-                const sameId = savedProductLocalStorrage.find((el) => el.id === idProduct && el.color === chosenColor);
+                const sameId = savedProductLocalStorage.find((el) => el.id === idProduct && el.color === chosenColor);
             
                     if (sameId) {
                         /* On utilise parseInt pour convertir la chaîne de caractères en nombre entier
-                        On additionne la quantité voulue dans storrageObject à la quantité déjà présente dans sameId */
-                        let addQuantity = parseInt(storrageObject.quantity,10) + parseInt(sameId.quantity,10);
+                        On additionne la quantité voulue dans storageObject à la quantité déjà présente dans sameId */
+                        let addQuantity = parseInt(storageObject.quantity,10) + parseInt(sameId.quantity,10);
                         // On assigne la nouvelle quantité calculée à sameId
                         sameId.quantity = addQuantity;
-                        localStorage.setItem("product", JSON.stringify(savedProductLocalStorrage));
-                        if (storrageObject.quantity == 1) {
+                        localStorage.setItem("product", JSON.stringify(savedProductLocalStorage));
+                        if (storageObject.quantity == 1) {
                             popUpSingular();
                         }
                         else {
@@ -130,9 +130,9 @@ const addToCart = (product) => {
                         
                     } else {
 
-                        savedProductLocalStorrage.push(storrageObject);
-                        localStorage.setItem("product", JSON.stringify(savedProductLocalStorrage))
-                        if (storrageObject.quantity == 1) {
+                        savedProductLocalStorage.push(storageObject);
+                        localStorage.setItem("product", JSON.stringify(savedProductLocalStorage))
+                        if (storageObject.quantity == 1) {
                             popUpSingular();
                         }
                         else {
@@ -142,15 +142,15 @@ const addToCart = (product) => {
                     }
                 } 
 
-                //  Si pas de produit enregistré dans le local storage (si savedProductLocalStorrage == null alors == false)
+                //  Si pas de produit enregistré dans le local storage (si savedProductLocalStorage == null alors == false)
                 else {
                     // On crée un tableau vide
-                    savedProductLocalStorrage = [];
+                    savedProductLocalStorage = [];
                     // On y injecte l'objet
-                    savedProductLocalStorrage.push(storrageObject);
-                    // On crée la clé "product" et on le sérialise en format JSON dans le local storrage
-                    localStorage.setItem("product", JSON.stringify(savedProductLocalStorrage));
-                    if (storrageObject.quantity == 1) {
+                    savedProductLocalStorage.push(storageObject);
+                    // On crée la clé "product" et on le sérialise en format JSON dans le local storage
+                    localStorage.setItem("product", JSON.stringify(savedProductLocalStorage));
+                    if (storageObject.quantity == 1) {
                         popUpSingular();
                     }
                     else {
