@@ -41,7 +41,7 @@ function deleteForm() {
 }
 
 // Si panier vide
-if (savedProductLocalStorrage == undefined || savedProductLocalStorrage.length == 0) {
+if (savedProductLocalStorrage == undefined) {
   updateCartTitle(true);
   document.getElementById("totalPlural").innerHTML = "";
   document.querySelector("#cartAndFormContainer h1").innerHTML = `<h1> Votre panier est vide !</p>`;
@@ -57,7 +57,7 @@ else {
   }
   
   console.log(savedProductLocalStorrage);
-
+  
   for (let h in idProduct) {
       
   fetch('http://localhost:3000/api/products/' + idProduct[h])
@@ -200,13 +200,13 @@ else {
         createDeleteDiv.appendChild(createDeleteP);
         createDeleteP.className = "deleteItem";
         createDeleteP.innerText = "Supprimer";
-      
+        
     }
 
-    setTimeout(calculateBasket, 1000);
     adjustQuantityCart();
     deleteProduct();
-    checkForm();
+    setTimeout(calculateBasket, 1000);
+    
   }
 
 setTimeout(displayProducts, 1000);
@@ -221,21 +221,29 @@ setTimeout(displayProducts, 1000);
 
 const calculateBasket = () => {
 
-  let allPrices = [];
+  // let allPrices = [];
   
   for (let o in savedProductLocalStorrage) {
-    object3 = {
-      price : data[o].price,
-      quantity : savedProductLocalStorrage[o].quantity
-    }
-    console.log(object3);
-    allPrices.push(object3);
+    // object3 = {
+    //   price : data[o].price,
+    //   quantity : savedProductLocalStorrage[o].quantity,
+    //   id : savedProductLocalStorrage[o].id
+    
+    // }
+
+    data[o].color = savedProductLocalStorrage[o].color;
+    data[o].quantity = savedProductLocalStorrage[o].quantity;
+    
+    // console.log(object3);
+    // allPrices.push(object3);
+    
+    console.table(data);
   }
 
-  console.table(allPrices);
+  // console.table(allPrices);
   let totalPrice = 0;
   console.log(data);
-  allPrices.forEach(el => totalPrice += el.price * el.quantity);
+  data.forEach(el => totalPrice += el.price * el.quantity);
   console.log(totalPrice);
   
   // Affichage du nombre total de produits choisis
@@ -275,13 +283,18 @@ const deleteProduct = () => {
       // Suppression de l'élément article du DOM
       let articleDOM = deleteItem[l].closest("article");
       articleDOM.remove();
-
+      
       // Suppression des produits du localstorage selon leur id et couleur
       let deleteById = savedProductLocalStorrage[l].id;
       let deleteByColor = savedProductLocalStorrage[l].color;
       savedProductLocalStorrage = savedProductLocalStorrage.filter(el => el.id != deleteById || el.color != deleteByColor);
-      localStorage.setItem("product", JSON.stringify(savedProductLocalStorrage));
+      localStorage.setItem("product", JSON.stringify(savedProductLocalStorrage));   
       
+      let deleteIdData = data[l]._id;
+      let deleteColorData = data[l].color;
+      data = data.filter(el => el._id != deleteIdData || el.color != deleteColorData);
+      
+
       // Si plus de produits, suppression de la clé product du localstorage et recalcul du panier
       if (savedProductLocalStorrage.length == 0) {
         console.log(savedProductLocalStorrage.length);
@@ -290,10 +303,6 @@ const deleteProduct = () => {
         calculateBasket();
         deleteForm();
       
-      } else if (savedProductLocalStorrage.length == 1) {
-        console.log(savedProductLocalStorrage.length);
-        document.getElementById("totalPlural").innerHTML = "";
-        calculateBasket();
       } else {
         
         calculateBasket();
@@ -369,7 +378,7 @@ function checkForm() {
       return false;
     }
   }
-
+  
   // *********** Vérification des données du NOM DE FAMILLE *********** //
 
   form.lastName.addEventListener("change", function () {
@@ -458,25 +467,27 @@ function checkForm() {
     }
   }
 
-  if (validFirstName(form.firstName) && validLastName(form.lastName) && validAddress(form.address) && validCity(form.city) && validEmail(form.email)) {
-    
-    console.log("formulaire valide");
-    sendForm();
-  
-  } else {
-    
-    console.log("formulaire non valide");
-  }
+  form.addEventListener("submit", function (e) {
 
+    e.preventDefault();
+    
+    if (validFirstName(form.firstName) && validLastName(form.lastName) && validAddress(form.address) && validCity(form.city) && validEmail(form.email)) {
+      
+      console.log("formulaire valide");
+      sendForm();
+    
+    } else {
+      
+      console.log("formulaire non valide");
+    }
+  })
+  
 }
 
-
+checkForm();
 //*********** Soumission du formulaire *********** //
 
 function sendForm() {
-
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
     
     // Si formulaire valide on créer un tableau et on y intègre les id des produits choisis par le client
     let productId = [];
@@ -514,8 +525,6 @@ function sendForm() {
         const data = await response.json();
         console.log(data);
         localStorage.clear();
-        // Récupération du numéro de commande et création d'une clé "orderId" dans le localstorage
-        // localStorage.setItem("orderId", data.orderId);
         // On passe l'ID de commande dans l'URL
         document.location.href = `./confirmation.html?id=${data.orderId}`;
 
@@ -524,9 +533,7 @@ function sendForm() {
       }
     })
   
-  });
-}
-
+};
 
 
 

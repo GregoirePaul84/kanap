@@ -162,6 +162,3 @@ const addToCart = (product) => {
     })
 
 };
-
-
-
