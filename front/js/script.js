@@ -23,7 +23,7 @@ const displayItems = (products) => {
     for (let i in products) {
         items.innerHTML += `<a href="./product.html?id=${products[i]._id}">
         <article>
-          <img src="${products[i].imageUrl}" alt="Lorem ipsum dolor sit amet, Kanap name1">
+          <img src="${products[i].imageUrl}" alt="${products[i].altTxt}">
           <h3 class="productName">${products[i].name}</h3>
           <p class="productDescription">${products[i].description}</p>
         </article>
